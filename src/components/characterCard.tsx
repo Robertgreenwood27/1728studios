@@ -18,7 +18,7 @@ const CharacterCard = ({ teacher }) => {
   return (
     // Use the teacher's slug for the URL
     <Link href={`/teacher/${teacher.slug?.current}`}>
-        <Card className="flex flex-col items-center transform hover:scale-105 transition-transform duration-300">
+        <Card className="flex flex-col items-center transform hover:scale-105 transition-transform duration-300 border-blue-800 rounded-xl">
           <CardHeader className="flex flex-col items-center">
             <div 
               className="rounded-full overflow-hidden"

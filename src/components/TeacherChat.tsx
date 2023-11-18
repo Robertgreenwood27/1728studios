@@ -89,8 +89,8 @@ const TeacherChat = ({ teacher }) => {
   };
 
   return (
-    <Card className="flex flex-col items-center w-11/12 mx-auto text-white bg-black shadow-2xl rounded-lg hover:scale-105 transition-all ease-in-out duration-200">
-  <header className="flex flex-col items-center w-full p-6 bg-zinc-900 rounded-t-lg shadow-inner">
+    <Card className="flex flex-col items-center w-11/12 mx-auto text-white bg-black shadow-2xl hover:scale-105 transition-all ease-in-out duration-200 border-blue-800 rounded-xl">
+  <header className="flex flex-col items-center w-full p-6 border-blue-800 rounded-xl shadow-inner">
     <div 
       className="w-36 h-36 rounded-full bg-cover bg-center shadow-2xl ring-4 ring-zinc-100"
       style={{
@@ -126,7 +126,7 @@ const TeacherChat = ({ teacher }) => {
   onChange={(e) => setUserInput(e.target.value)}
   onKeyDown={handleKeyDown}
   placeholder="Type your message..."
-  className="w-full mt-6 p-4 text-sm bg-black rounded-md focus:ring focus:ring-indigo-700 custom-scrollbar"  // Added custom-scrollbar
+  className="w-full mt-6 p-4 text-sm bg-black border-blue-800 rounded-xl focus:ring focus:ring-indigo-700 custom-scrollbar"  // Added custom-scrollbar
 />
 
     <Button 

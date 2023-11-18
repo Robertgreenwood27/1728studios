@@ -30,18 +30,17 @@ export default function GuideAd() {
   };
 
   return (
-    <div className="flex justify-center p-12">
-      <div className="cursor-pointer inline-block" onClick={handleGuideLinkClick}>
-        <Card className="max-w-xl text-center">
-          <CardHeader className="p-6">
-            <Image src="/guidelogo.svg" alt="Guide Logo" width={500} height={300} className="w-auto h-auto mx-auto mb-3" />
-            <CardDescription className="text-2xl mb-5">Talk to skilled AI educators!</CardDescription>
-          </CardHeader>
-          <CardContent className="p-6">
-            <Image src="/guides.png" alt="Guides Preview" width={500} height={300} className="w-full h-auto mx-auto" />
-          </CardContent>
-        </Card>
-      </div>
+    <div className="flex p-12">
+  <div className="cursor-pointer flex flex-col lg:flex-row items-center border border-blue-800 rounded-xl" onClick={handleGuideLinkClick}>
+    <div className="flex-none">
+      <Image src="/guidelogo.svg" alt="Guide Logo" width={500} height={300} />
     </div>
+    <div className="flex-grow text-center p-6">
+      <CardDescription className="text-2xl mb-5">Talk to skilled AI educators!</CardDescription>
+      <Image src="/guides.png" alt="Guides Preview" width={500} height={300} />
+    </div>
+  </div>
+</div>
+
   );
 }

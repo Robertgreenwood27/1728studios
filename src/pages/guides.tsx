@@ -31,7 +31,7 @@ const Guides = () => {
         placeholder="Search for a teacher..."
         value={searchQuery}
         onChange={handleSearchChange}
-        className="bg-black text-white"
+        className="bg-black text-white border-blue-800 rounded-xl"
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-center items-center">
         {filteredTeachers.map((teacher, index) => (
