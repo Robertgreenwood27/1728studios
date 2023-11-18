@@ -20,9 +20,15 @@ export default function Login(): ReactElement {
   }
 
   return (
-    <div>
-      <button onClick={() => signInWithGithub()}>Sign in with GitHub</button>
+    <div className="flex justify-center items-center">
+      <div className="p-6 max-w-sm mx-auto rounded-xl shadow-md flex items-center space-x-4 border border-blue-800">
+        <div className="flex flex-col items-center">
+          <div className="text-xl font-medium text-white">Sign in or sign up with just a click</div>
+          <button className="mt-4 bg-blue-800 text-white font-bold py-2 px-4 rounded hover:bg-blue-700" onClick={() => signInWithGithub()}>
+            Sign in with GitHub
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
-

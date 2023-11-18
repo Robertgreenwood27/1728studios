@@ -17,24 +17,17 @@ export default function SignIn() {
     }
   }, [user, loading, userIsPremium, router]);
 
-  if (loading) return <h1>Loading...</h1>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (loading) return <h1 className="text-center text-3xl font-bold mt-12">Loading...</h1>;
+  if (error) return <div className="text-red-500 text-center mt-12">Error: {error.message}</div>;
 
   if (!user) return <Login />;
 
   if (user && !userIsPremium) {
     return (
-      <div>
-        <h2>Get premium access for $4.99!</h2>
-        <button onClick={() => createCheckoutSession(user.uid)}>Upgrade Now</button>
+      <div className="flex flex-col items-center mt-12">
+        <h2 className="text-2xl font-bold mb-4">Get premium access for $4.99!</h2>
+        <button className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700" onClick={() => createCheckoutSession(user.uid)}>Upgrade Now</button>
       </div>
     );
   }
-
-  // Optionally, include additional UI for authenticated users here
-  return (
-    <div>
-      {/* Your UI for authenticated users */}
-    </div>
-  );
 }
