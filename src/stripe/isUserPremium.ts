@@ -1,3 +1,4 @@
+//stripe/usUserPremium.ts
 import { auth } from "../firebase/firebaseClient";
 
 export default async function isUserPremium(): Promise<boolean> {
