@@ -5,6 +5,11 @@ import { Button } from './ui/button';
 import { generatePrompt } from '../lib/generatePrompt';
 import { useLoading } from '../components/LoadingContext'; // Make sure the path is correct
 
+interface ChatMessage {
+  sender: string;
+  message: string;
+}
+
 interface TeacherChatProps {
   teacher: {
     photo: string;
@@ -14,7 +19,7 @@ interface TeacherChatProps {
 }
 
 const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
-  const [chatLog, setChatLog] = useState<string[]>([]);
+  const [chatLog, setChatLog] = useState<ChatMessage[]>([]); // Updated type to ChatMessage[]
   const [userInput, setUserInput] = useState<string>('');
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
 
@@ -26,7 +31,7 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
     if (scrollArea) {
       scrollArea.scrollTop = scrollArea.scrollHeight;
     }
-  }, [chatLog]); // isLoading removed from dependency array as it's now global
+  }, [chatLog]);
 
   const imageUrl = builder
     .image(teacher.photo)
@@ -40,7 +45,7 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
   const bgImagePath = `/bg${randomBgNumber}.png`;
 
   const handleSendMessage = async () => {
-    setLoading(true); // Set global loading state
+    setLoading(true);
 
     const newChatLog = [...chatLog, { sender: 'user', message: userInput }];
 
@@ -71,7 +76,7 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
 
     setChatLog(newChatLog);
     setUserInput('');
-    setLoading(false); // Reset global loading state
+    setLoading(false);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
