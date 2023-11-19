@@ -3,7 +3,7 @@ import builder from '../lib/imageUrlBuilder';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
 import { generatePrompt } from '../lib/generatePrompt';
-import { useLoading } from '../components/LoadingContext'; // Make sure the path is correct
+import { useLoading } from '../components/LoadingContext';
 
 interface ChatMessage {
   sender: string;
@@ -19,11 +19,9 @@ interface TeacherChatProps {
 }
 
 const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
-  const [chatLog, setChatLog] = useState<ChatMessage[]>([]); // Updated type to ChatMessage[]
+  const [chatLog, setChatLog] = useState<ChatMessage[]>([]);
   const [userInput, setUserInput] = useState<string>('');
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
-
-  // Use the useLoading hook to access setLoading
   const { setLoading } = useLoading();
 
   useLayoutEffect(() => {
@@ -46,17 +44,13 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
 
   const handleSendMessage = async () => {
     setLoading(true);
-
     const newChatLog = [...chatLog, { sender: 'user', message: userInput }];
-
     const messages = newChatLog.map((chat) => ({
       role: chat.sender === 'user' ? 'user' : 'system',
       content: chat.message,
     }));
-
     const initialPrompt = generatePrompt(teacher);
     messages.unshift({ role: 'system', content: initialPrompt });
-
     const res = await fetch('/api/openai', {
       method: 'POST',
       headers: {
@@ -64,16 +58,13 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
       },
       body: JSON.stringify({ messages: messages }),
     });
-
     const data = await res.json();
-
     if (res.status !== 200) {
       console.error('Error from API:', data);
       newChatLog.push({ sender: 'api', message: 'An error occurred.' });
     } else {
       newChatLog.push({ sender: 'api', message: data.message });
     }
-
     setChatLog(newChatLog);
     setUserInput('');
     setLoading(false);
@@ -84,6 +75,11 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  // Custom component to bypass the type issue
+  const CustomTextarea: React.FC<any> = (props) => {
+    return <Textarea {...props} />;
   };
 
   return (
@@ -117,13 +113,14 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
           ))}
         </div>
 
-        <Textarea
+        <CustomTextarea
           value={userInput}
           onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setUserInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Type your message..."
           className="mt-6 p-4 bg-black rounded-lg focus:ring focus:ring-blue-600"
         />
+
         <Button
           onClick={handleSendMessage}
           className="mt-6 w-full py-3 font-semibold rounded-lg shadow-md transform transition duration-200 ease-in-out border-2 border-blue-800 hover:border-opacity-50 hover:border-blue-800"
