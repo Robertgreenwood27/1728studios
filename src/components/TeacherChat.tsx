@@ -76,7 +76,7 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
   };
 
   return (
-    <div className="h-screen flex flex-col items-center justify-between text-white">
+    <div className="flex flex-col items-center justify-between text-white mx-8 h-auto">
       <header className="flex flex-col items-center mb-10">
         <div
           className="w-40 h-40 rounded-full bg-cover bg-center shadow-lg mb-6"
@@ -89,30 +89,27 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
       </header>
 
       <div className="flex flex-col w-full rounded-lg shadow-inner flex-grow">
-        <div ref={scrollAreaRef} className="custom-scrollbar overflow-y-auto h-96 p-6">
-          {chatLog.map((chat, index) => (
-            <div
-              key={index}
-              className={`flex ${chat.sender === 'user' ? 'justify-end' : 'justify-start'} my-3`}
-            >
-              <div
-                className={`inline-flex px-5 py-3 rounded-lg shadow-md ${
-                  chat.sender === 'user' ? 'bg-blue-700' : ''
-                }`}
-              >
-                {chat.message}
+  <div ref={scrollAreaRef} className="custom-scrollbar overflow-y-auto h-96 p-6">
+    {chatLog.map((chat, index) => (
+      <div key={index} className={`flex ${chat.sender === 'user' ? 'justify-end' : 'justify-start'} my-3`}>
+        <div
+          className={`inline-flex px-5 py-3 rounded-lg ${
+            chat.sender === 'user' ? 'border border-blue-800' : 'border border-red-800'
+          } bg-black bg-opacity-50`}
+        >
+          {chat.message}
               </div>
             </div>
           ))}
         </div>
-
         <textarea
-          value={userInput}
-          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setUserInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type your message..."
-          className="mt-6 p-4 bg-black rounded-lg focus:ring focus:ring-blue-600"
-        />
+  value={userInput}
+  onChange={(e) => setUserInput(e.target.value)}
+  onKeyDown={handleKeyDown}
+  placeholder="Type your message..."
+  className="mt-6 p-4 bg-black text-white border border-blue-800 rounded-lg focus:ring focus:ring-blue-600"
+/>
+
 
         <button
           onClick={handleSendMessage}

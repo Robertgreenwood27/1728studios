@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { fetchAllTeachers } from '../lib/fetchData';
 import CharacterCard from '@/components/characterCard'; // Ensure this path is correct

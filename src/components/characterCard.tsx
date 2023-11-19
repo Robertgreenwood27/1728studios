@@ -1,36 +1,42 @@
 import React, { useMemo } from 'react';
 import Link from 'next/link';
+import builder from '../lib/imageUrlBuilder';
 
 const CharacterCard = ({ teacher }) => {
-  const imageUrl = useMemo(() => {
-    // I'm assuming you have a method to build the image URL. 
-    // Replace this with your actual method if different.
-    return `/path/to/images/${teacher.photo}`;
-  }, [teacher.photo]);
+  const imageUrl = builder
+    .image(teacher.photo)
+    .width(200)
+    .height(200)
+    .auto('format')
+    .fit('crop')
+    .url();
 
   const randomBgNumber = useMemo(() => Math.floor(Math.random() * 10) + 1, []);
   const bgImagePath = `/bg${randomBgNumber}.png`;
 
   return (
-    <Link href={`/teacher/${teacher.slug?.current}`}>
-      <div className="card flex flex-col items-center transform hover:scale-105 transition-transform duration-300 border-blue-800 rounded-xl">
-        <div className="card-header flex flex-col items-center">
+    <Link href={`/teacher/${teacher.slug?.current}`} legacyBehavior>
+      <a className="block transform hover:scale-105 transition-transform duration-300 border-2 border-blue-800 rounded-xl overflow-hidden">
+        <div className="flex flex-col items-center">
           <div 
             className="rounded-full overflow-hidden"
             style={{
               backgroundImage: `url('${bgImagePath}')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
+              width: '200px',
+              height: '200px',
+              margin: 'auto',
             }}
           >
-            <img src={imageUrl} alt={teacher.name} className="max-w-[200px] max-h-[200px]" />
+            <img src={imageUrl} alt={teacher.name} style={{ width: '200px', height: '200px' }} />
           </div>
-          <div className="card-title">{teacher.name}</div>
+          <div className="text-center mt-4">
+            <div className="text-lg font-bold">{teacher.name}</div>
+            <div className="text-sm">{teacher.departmentOrSubject}</div>
+          </div>
         </div>
-        <div className="card-content flex flex-col items-center">
-          <div className="card-description">{teacher.departmentOrSubject}</div>
-        </div>
-      </div>
+      </a>
     </Link>
   );
 };
