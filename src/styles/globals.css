@@ -145,6 +145,28 @@
 
 
 body {
-  background-color: black;
+background-color: black;
   color: white; /* Ensuring text is visible on a black background */
 }
+
+
+
+
+/* styles/globals.css */
+
+#canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -5;
+}
+
+body, html {
+  margin: 0;
+  height: 100%;
+}
+
+
+
+
+
