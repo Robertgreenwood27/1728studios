@@ -10,13 +10,12 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   
-  
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
-  const isValidPassword = (password) => password.length >= 6;
+  const isValidEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
+  const isValidPassword = (password: string) => password.length >= 6;
 
   async function signInWithGoogle() {
     try {
