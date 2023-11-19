@@ -47,17 +47,26 @@ export default function Login() {
       // ... handle successful authentication
     } catch (error) {
       let message = '';
-      switch (error.code) {
-        case 'auth/wrong-password':
-          message = 'Incorrect password. Please try again.';
-          break;
-        case 'auth/user-not-found':
-          message = 'No user found with this email.';
-          break;
-        // Add more cases as needed
-        default:
-          message = 'An error occurred. Please try again.';
+
+      // Check if the error is an object and has a 'code' property
+      if (typeof error === 'object' && error !== null && 'code' in error) {
+        const errorCode = (error as { code: string }).code;
+        switch (errorCode) {
+          case 'auth/wrong-password':
+            message = 'Incorrect password. Please try again.';
+            break;
+          case 'auth/user-not-found':
+            message = 'No user found with this email.';
+            break;
+          // Add more cases as needed
+          default:
+            message = 'An error occurred. Please try again.';
+        }
+      } else {
+        // Handle the case where the error is not the expected type
+        message = 'An unexpected error occurred.';
       }
+
       setErrorMessage(message);
     } finally {
       setLoading(false);
