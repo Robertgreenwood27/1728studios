@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 // Define the context type
 type LoadingContextType = {
@@ -12,8 +12,13 @@ const LoadingContext = createContext<LoadingContextType>({
   setLoading: () => {},
 });
 
+// Define the props for LoadingProvider
+type LoadingProviderProps = {
+  children: ReactNode;
+};
+
 // Provide the context
-export const LoadingProvider: React.FC = ({ children }) => {
+export const LoadingProvider = ({ children }: LoadingProviderProps) => {
   const [isLoading, setLoading] = useState(false);
 
   return (
