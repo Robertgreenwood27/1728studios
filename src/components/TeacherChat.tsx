@@ -76,7 +76,7 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between text-white mx-8 h-auto">
+    <div className="flex flex-col items-center justify-between text-white mx-8" style={{ height: 'calc(100vh - 50px)' }}>
       <header className="flex flex-col items-center mb-10">
         <div
           className="w-40 h-40 rounded-full bg-cover bg-center shadow-lg mb-6"
@@ -88,8 +88,8 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
         <span className="text-zinc-500">{teacher.departmentOrSubject}</span>
       </header>
 
-      <div className="flex flex-col w-full rounded-lg shadow-inner flex-grow">
-  <div ref={scrollAreaRef} className="custom-scrollbar overflow-y-auto h-96 p-6">
+      <div className="flex flex-col w-full rounded-lg shadow-inner flex-grow overflow-hidden"> {/* Added overflow hidden */}
+        <div ref={scrollAreaRef} className="custom-scrollbar overflow-y-auto flex-grow p-6"> {/* Made this div flex-grow */}
     {chatLog.map((chat, index) => (
       <div key={index} className={`flex ${chat.sender === 'user' ? 'justify-end' : 'justify-start'} my-3`}>
         <div
