@@ -1,8 +1,10 @@
-import { Configuration, OpenAIApi } from 'openai';
+import { Configuration, OpenAIApi } from "openai";
 
 const configuration = new Configuration({
+  organization: "YOUR_ORG_ID", // Replace with your actual organization ID if you have one
   apiKey: process.env.OPENAI_API_KEY,
 });
+
 const openai = new OpenAIApi(configuration);
 
 export const getGPT3Response = async (messages, res) => {
@@ -12,14 +14,11 @@ export const getGPT3Response = async (messages, res) => {
       messages: messages,
     });
 
-    // Assuming the response from the API has the same structure as the JSON you provided
     const content = completion.data.choices[0].message.content.trim();
-    
-    res.write(content); // Stream the content back to the client
-    res.end(); // End the response
-
+    res.write(content);
+    res.end();
   } catch (error) {
-    console.error(error); // Log the error for debugging
+    console.error(error);
     res.status(500).json({ error: "An error occurred during your request." });
   }
 };
