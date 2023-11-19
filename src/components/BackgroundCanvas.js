@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 
 const BackgroundCanvas = ({ isLoading }) => {
@@ -16,7 +17,7 @@ const BackgroundCanvas = ({ isLoading }) => {
     const lineWidth = 1;
 
     // Adjust the velocity multiplier based on loading state
-    const velocityMultiplier = isLoading ? 0.06 : 0.03; // Adjust velocity depending on loading state
+    const velocityMultiplier = isLoading ? 0.06 : 1; // Adjust velocity depending on loading state
 
     // Mouse position
     const mouse = {
