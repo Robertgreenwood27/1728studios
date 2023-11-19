@@ -1,7 +1,5 @@
 import React, { useState, useMemo, useRef, useLayoutEffect, ChangeEvent, KeyboardEvent } from 'react';
 import builder from '../lib/imageUrlBuilder';
-import { Textarea } from './ui/textarea';
-import { Button } from './ui/button';
 import { generatePrompt } from '../lib/generatePrompt';
 import { useLoading } from '../components/LoadingContext';
 
@@ -77,11 +75,6 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
     }
   };
 
-  // Custom component to bypass the type issue
-  const CustomTextarea: React.FC<any> = (props) => {
-    return <Textarea {...props} />;
-  };
-
   return (
     <div className="h-screen flex flex-col items-center justify-between text-white">
       <header className="flex flex-col items-center mb-10">
@@ -113,7 +106,7 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
           ))}
         </div>
 
-        <CustomTextarea
+        <textarea
           value={userInput}
           onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setUserInput(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -121,12 +114,12 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
           className="mt-6 p-4 bg-black rounded-lg focus:ring focus:ring-blue-600"
         />
 
-        <Button
+        <button
           onClick={handleSendMessage}
-          className="mt-6 w-full py-3 font-semibold rounded-lg shadow-md transform transition duration-200 ease-in-out border-2 border-blue-800 hover:border-opacity-50 hover:border-blue-800"
+          className="mt-6 w-full py-3 font-semibold text-white rounded-lg shadow-md transform transition duration-200 ease-in-out border-2 border-blue-800 hover:border-opacity-50 hover:border-blue-800"
         >
           Send
-        </Button>
+        </button>
       </div>
     </div>
   );
