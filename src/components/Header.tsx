@@ -39,7 +39,7 @@ const Header = () => {
         <div style={headerStyle}>
             {isMobile ? 
                 <MobileView toggleOpen={toggleOpen} isOpen={isOpen} links={links} /> : 
-                <DeskView toggleOpen={toggleOpen} isOpen={isOpen} links={links} />
+                <DeskView links={links} />
             }
         </div>
     );
