@@ -76,7 +76,7 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between text-white mx-8" style={{ height: 'calc(100vh - 50px)' }}>
+    <div className="flex flex-col items-center justify-between text-white mx-8b pb-20" style={{ height: 'calc(100vh - 50px)' }}>
       <header className="flex flex-col items-center mb-10">
         <div
           className="w-40 h-40 rounded-full bg-cover bg-center shadow-lg mb-6"
@@ -107,7 +107,7 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
   onChange={(e) => setUserInput(e.target.value)}
   onKeyDown={handleKeyDown}
   placeholder="Type your message..."
-  className="mt-6 p-4 bg-black text-white border border-blue-800 rounded-lg focus:ring focus:ring-blue-600"
+  className="mt-6 p-4 bg-transparent text-white border border-blue-800 rounded-lg focus:ring focus:ring-blue-600"
 />
 
 
