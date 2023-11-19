@@ -1,8 +1,6 @@
-
 import React, { useEffect, useState } from 'react';
 import { fetchAllTeachers } from '../lib/fetchData';
 import CharacterCard from '@/components/characterCard'; // Ensure this path is correct
-import { Input } from '@/components/ui/input'; // Ensure this path is correct
 
 const Guides = () => {
   const [teachers, setTeachers] = useState([]);
@@ -15,7 +13,7 @@ const Guides = () => {
     };
 
     fetchTeachers();
-  }, []); // This effect runs on mount
+  }, []);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -27,12 +25,12 @@ const Guides = () => {
 
   return (
     <div>
-      <Input
+      <input
         type="text"
         placeholder="Search for a teacher..."
         value={searchQuery}
         onChange={handleSearchChange}
-        className="bg-black text-white border-blue-800 rounded-xl"
+        className="bg-black text-white border border-blue-800 rounded-xl p-2 mb-4 w-full"
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-center items-center">
         {filteredTeachers.map((teacher, index) => (
