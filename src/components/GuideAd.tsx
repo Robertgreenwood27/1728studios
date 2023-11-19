@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { auth } from "src/firebase/firebaseClient"; 
 import usePremiumStatus from "src/stripe/usePremiumStatus";
 import Image from "next/image";
-import { Card, CardHeader, CardDescription, CardContent } from '@/components/ui/card';
 import { createCheckoutSession } from "src/stripe/createCheckoutSession";
 
 export default function GuideAd() {
@@ -18,29 +17,35 @@ export default function GuideAd() {
     if (!user) {
       router.push('/signIn');
     } else if (user && !userIsPremium) {
-      return (
-        <div>
-          <h2>Get premium access for $4.99!</h2>
-          <button onClick={() => createCheckoutSession(user.uid)}>Upgrade Now</button>
-        </div>
-      );
+      // This block seems to be misplaced, it should be part of the rendered JSX
+      // Consider moving this logic outside the event handler
     } else {
       router.push('/guides');
     }
   };
 
+  // Render the block for non-premium users
+  const renderNonPremiumContent = () => {
+    return user && !userIsPremium ? (
+      <div>
+        <h2>Get premium access for $4.99!</h2>
+        <button onClick={() => createCheckoutSession(user.uid)}>Upgrade Now</button>
+      </div>
+    ) : null;
+  };
+
   return (
     <div className="flex p-12">
-  <div className="cursor-pointer flex flex-col lg:flex-row items-center border border-blue-800 rounded-xl" onClick={handleGuideLinkClick}>
-    <div className="flex-none">
-      <Image src="/guidelogo.svg" alt="Guide Logo" width={500} height={300} />
+      <div className="cursor-pointer flex flex-col lg:flex-row items-center border border-blue-800 rounded-xl" onClick={handleGuideLinkClick}>
+        <div className="flex-none">
+          <Image src="/guidelogo.svg" alt="Guide Logo" width={500} height={300} />
+        </div>
+        <div className="flex-grow text-center p-6">
+          <div className="text-2xl mb-5">Talk to skilled AI educators!</div>
+          <Image src="/guides.png" alt="Guides Preview" width={500} height={300} />
+        </div>
+      </div>
+      {renderNonPremiumContent()}
     </div>
-    <div className="flex-grow text-center p-6">
-      <CardDescription className="text-2xl mb-5">Talk to skilled AI educators!</CardDescription>
-      <Image src="/guides.png" alt="Guides Preview" width={500} height={300} />
-    </div>
-  </div>
-</div>
-
   );
 }
