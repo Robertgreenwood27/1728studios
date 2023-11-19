@@ -12,7 +12,7 @@ const BackgroundCanvas = ({ isLoading }) => {
 
     // Style settings based on isLoading
     const nodeColor = isLoading ? 'rgba(255, 0, 0, 0.1)' : 'rgba(137, 207, 240, 0.1)'; // Red when loading
-    const lineColor = isLoading ? 'rgba(255, 0, 0, 0.2)' : 'rgba(137, 207, 240, 0.2)'; // Redder lines when loading
+    const lineColor = isLoading ? 'rgba(255, 0, 0, 0.1)' : 'rgba(137, 207, 240, 0.1)'; // Redder lines when loading
     const nodeRadius = 1;
     const lineWidth = 1;
 
@@ -36,7 +36,7 @@ const BackgroundCanvas = ({ isLoading }) => {
 
     // Node creation
     const nodes = [];
-    const nodeCount = 100;
+    const nodeCount = 50;
 
     for (let i = 0; i < nodeCount; i++) {
       nodes.push({
