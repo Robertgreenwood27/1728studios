@@ -10,7 +10,6 @@ import { createCheckoutSession } from 'src/stripe/createCheckoutSession';
 const TeacherSlug = () => {
   const [teacher, setTeacher] = useState(null);
   const [user, loading, error] = useAuthState(auth);
-  // Assuming usePremiumStatus returns an array [isPremium, isLoading]
   const [userIsPremium, premiumLoading] = usePremiumStatus(user ?? null);
   const router = useRouter();
   const { slug } = router.query;
@@ -23,9 +22,17 @@ const TeacherSlug = () => {
       return;
     }
 
-    if (user && !userIsPremium) {
+    // Add a flag to localStorage to track if checkout session was already created
+    const checkoutInitiated = localStorage.getItem('checkoutInitiated');
+
+    if (user && !userIsPremium && !checkoutInitiated) {
       createCheckoutSession(user.uid); // Prompt non-premium user to upgrade
+      localStorage.setItem('checkoutInitiated', 'true'); // Set flag in localStorage
       return;
+    }
+
+    if (userIsPremium) {
+      localStorage.removeItem('checkoutInitiated'); // Remove flag if user is premium
     }
 
     // Fetch teacher data if user is authenticated and premium

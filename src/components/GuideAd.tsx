@@ -38,7 +38,7 @@ export default function GuideAd() {
     <div className="flex p-12">
       <div className="cursor-pointer flex flex-col lg:flex-row items-center border border-blue-800 rounded-xl" onClick={handleGuideLinkClick}>
         <div className="flex-none">
-          <Image src="/guidelogo.svg" alt="Guide Logo" width={500} height={300} />
+          <Image src="/guidelogo.png" alt="Guide Logo" width={500} height={300} />
         </div>
         <div className="flex-grow text-center p-6">
           <div className="text-2xl mb-5">Talk to skilled AI educators!</div>
