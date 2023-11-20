@@ -19,7 +19,7 @@ const MobileView = ({ toggleOpen, isOpen, links }) => {
                 <Logo />
 
                 {/* Menu Toggle */}
-                <button onClick={toggleOpen} className="p-2 rounded-md focus:outline-none focus:bg-blue-700">
+                <button onClick={toggleOpen} className="p-2 rounded-md focus:outline-none ">
                     <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                     </svg>
@@ -31,7 +31,7 @@ const MobileView = ({ toggleOpen, isOpen, links }) => {
                 <div className="py-4">
                     {links.map((link, index) => (
                         <Link key={index} href={link.path} legacyBehavior>
-                            <a className="block text-white px-6 py-2 hover:bg-gray-800 transition duration-300">
+                            <a className="block text-white px-6 py-2 hover:border border-blue-800 transition duration-300">
                                 {link.label}
                             </a>
                         </Link>

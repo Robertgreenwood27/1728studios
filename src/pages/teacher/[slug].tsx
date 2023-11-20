@@ -17,25 +17,23 @@ const TeacherSlug = () => {
   useEffect(() => {
     if (loading || premiumLoading) return; // Wait for both user and premium status to be determined
 
+    const checkoutInitiated = localStorage.getItem('checkoutInitiated');
+
     if (!user) {
       router.push('/signIn'); // Redirect to sign-in if not authenticated
       return;
     }
 
-    // Add a flag to localStorage to track if checkout session was already created
-    const checkoutInitiated = localStorage.getItem('checkoutInitiated');
-
     if (user && !userIsPremium && !checkoutInitiated) {
-      createCheckoutSession(user.uid); // Prompt non-premium user to upgrade
-      localStorage.setItem('checkoutInitiated', 'true'); // Set flag in localStorage
+      createCheckoutSession(user.uid);
+      localStorage.setItem('checkoutInitiated', 'true');
       return;
     }
 
     if (userIsPremium) {
-      localStorage.removeItem('checkoutInitiated'); // Remove flag if user is premium
+      localStorage.removeItem('checkoutInitiated');
     }
 
-    // Fetch teacher data if user is authenticated and premium
     if (slug && userIsPremium) {
       const fetchTeacher = async () => {
         const fetchedTeacher = await fetchTeacherBySlug(slug);

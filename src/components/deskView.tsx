@@ -15,7 +15,7 @@ const DeskView = ({ links }) => {
     };
 
     return (
-        <header className="flex items-center justify-between px-6 py-4 shadow-md">
+        <header className="flex items-center justify-between px-6 py-4 shadow-md bg-transparent">
             <Logo />
 
             <nav className="flex items-center space-x-4">

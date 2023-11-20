@@ -2,11 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DeskView from './deskView';
 import MobileView from './mobileView';
 
-const darkTheme = {
-  backgroundColor: '#000',
-  color: '#fff',
-  // ... additional dark theme styles ...
-};
+
 
 const Header = () => {
     const [isMobile, setIsMobile] = useState(true);
@@ -33,10 +29,10 @@ const Header = () => {
         // ... more links ...
     ];
 
-    const headerStyle = isMobile ? { ...darkTheme } : {};
+  
 
     return (
-        <div style={headerStyle}>
+        <div>
             {isMobile ? 
                 <MobileView toggleOpen={toggleOpen} isOpen={isOpen} links={links} /> : 
                 <DeskView links={links} />
