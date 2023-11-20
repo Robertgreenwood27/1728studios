@@ -22,6 +22,7 @@ export default function Login() {
       await signInWithPopup(auth, new GoogleAuthProvider());
       // ... handle successful sign-in
     } catch (error) {
+      console.error("Error signing in with Google:", error);
       // ... handle errors
     }
   }
@@ -31,24 +32,25 @@ export default function Login() {
       setErrorMessage('Invalid email or password.');
       return;
     }
-
+  
     setLoading(true);
     setErrorMessage('');
-
+  
     try {
       const signInMethods = await fetchSignInMethodsForEmail(auth, email);
       if (signInMethods.length === 0) {
-        // No user found, create a new account
+        // No user found with this email, create a new account
         await createUserWithEmailAndPassword(auth, email, password);
+        // TODO: Handle successful account creation, e.g., redirect to dashboard
       } else {
-        // User exists, sign them in
+        // User exists with this email, sign them in
         await signInWithEmailAndPassword(auth, email, password);
+        // TODO: Handle successful sign-in, e.g., redirect to dashboard
       }
-      // ... handle successful authentication
     } catch (error) {
+      console.error("Error in handleLoginOrCreateAccount:", error);
+  
       let message = '';
-
-      // Check if the error is an object and has a 'code' property
       if (typeof error === 'object' && error !== null && 'code' in error) {
         const errorCode = (error as { code: string }).code;
         switch (errorCode) {
@@ -58,7 +60,11 @@ export default function Login() {
           case 'auth/user-not-found':
             message = 'No user found with this email.';
             break;
-          // Add more cases as needed
+          case 'auth/email-already-in-use':
+            // Since the email is already in use, try signing in instead
+            await signInWithEmailAndPassword(auth, email, password);
+            return; // Exit the function after handling sign-in
+          // Add more cases for other errors as needed
           default:
             message = 'An error occurred. Please try again.';
         }
@@ -66,12 +72,14 @@ export default function Login() {
         // Handle the case where the error is not the expected type
         message = 'An unexpected error occurred.';
       }
-
+  
       setErrorMessage(message);
     } finally {
       setLoading(false);
     }
   }
+  
+  
 
   return (
     <div className="flex justify-center items-center">
