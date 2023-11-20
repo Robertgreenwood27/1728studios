@@ -1,32 +1,52 @@
-
 import { useEffect } from 'react';
 
 const BackgroundCanvas = ({ isLoading }) => {
+  // Normal state control panel
+  const normal = {
+    colorChangeSpeed: .01,
+    saturation: 100,
+    lightness: 100,
+    speedMultiplier: 1,
+    nodeCount: 80,
+    nodeBaseRadius: 1,
+    lineWidth: 1,
+    gravityRadius: 150,
+    maxLineDistance: 200,
+    nodeColor: 'rgba(0, 150, 255, 0.1)', // Example color for normal state nodes
+    lineColor: 'rgba(0, 150, 255, 0.1)' // Example color for normal state lines
+  };
+
+  // Loading state control panel
+  const loading = {
+    colorChangeSpeed: .01,
+    saturation: 100,
+    lightness: 100,
+    speedMultiplier: 20,
+    nodeCount: 80,
+    nodeBaseRadius: 1,
+    lineWidth: 1,
+    gravityRadius: 150,
+    maxLineDistance: 200,
+    nodeColor: 'rgba(255, 0, 0, 0.1)', // Example color for loading state nodes
+    lineColor: 'rgba(255, 0, 0, .3)' // Example color for loading state lines
+  };
+
   useEffect(() => {
-    console.log("isLoading in BackgroundCanvas:", isLoading); // Debugging statement
+    console.log("isLoading in BackgroundCanvas:", isLoading);
 
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // Style settings based on isLoading
-    const nodeColor = isLoading ? 'rgba(255, 0, 0, 0.1)' : 'rgba(137, 207, 240, 0.1)'; // Red when loading
-    const lineColor = isLoading ? 'rgba(255, 0, 0, 0.1)' : 'rgba(137, 207, 240, 0.1)'; // Redder lines when loading
-    const nodeRadius = 1;
-    const lineWidth = 1;
+    const config = isLoading ? loading : normal;
 
-    // Adjust the velocity multiplier based on loading state
-    const velocityMultiplier = isLoading ? 0.06 : 1; // Adjust velocity depending on loading state
-
-    // Mouse position
     const mouse = {
       x: null,
       y: null,
-      gravityRadius: 150 // Radius of mouse's gravitational pull
+      gravityRadius: config.gravityRadius
     };
 
-    // Update mouse position on mousemove
     const updateMousePosition = (event) => {
       mouse.x = event.x;
       mouse.y = event.y;
@@ -34,20 +54,16 @@ const BackgroundCanvas = ({ isLoading }) => {
 
     window.addEventListener('mousemove', updateMousePosition);
 
-    // Node creation
     const nodes = [];
-    const nodeCount = 50;
-
-    for (let i = 0; i < nodeCount; i++) {
+    for (let i = 0; i < config.nodeCount; i++) {
       nodes.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * velocityMultiplier,
-        vy: (Math.random() - 0.5) * velocityMultiplier,
+        vx: (Math.random() - 0.5) * config.speedMultiplier,
+        vy: (Math.random() - 0.5) * config.speedMultiplier,
       });
     }
 
-    // Resize listener
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -56,37 +72,31 @@ const BackgroundCanvas = ({ isLoading }) => {
 
     let animationFrameId;
 
-    // Animation update function
     const update = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw nodes
       nodes.forEach(node => {
         node.x += node.vx;
         node.y += node.vy;
 
-        // Bounce off the edges
         if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
         if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
 
-        // Draw node
-        ctx.fillStyle = nodeColor;
+        ctx.fillStyle = config.nodeColor;
         ctx.beginPath();
-        ctx.arc(node.x, node.y, nodeRadius, 0, Math.PI * 2);
+        ctx.arc(node.x, node.y, config.nodeBaseRadius, 0, Math.PI * 2);
         ctx.fill();
       });
 
-      // Connect nodes with lines
-      ctx.strokeStyle = lineColor;
-      ctx.lineWidth = lineWidth;
+      ctx.strokeStyle = config.lineColor;
+      ctx.lineWidth = config.lineWidth;
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const dx = nodes[i].x - nodes[j].x;
           const dy = nodes[i].y - nodes[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          // Draw line if close enough
-          if (dist < 200) {
+          if (dist < config.maxLineDistance) {
             ctx.beginPath();
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
@@ -94,7 +104,6 @@ const BackgroundCanvas = ({ isLoading }) => {
           }
         }
 
-        // Attract nodes to the mouse cursor
         const dx = mouse.x - nodes[i].x;
         const dy = mouse.y - nodes[i].y;
         const distance = Math.sqrt(dx * dx + dy * dy);
@@ -104,20 +113,17 @@ const BackgroundCanvas = ({ isLoading }) => {
         }
       }
 
-      // Request next animation frame
       animationFrameId = requestAnimationFrame(update);
     };
 
-    // Start the animation
     update();
 
-    // Cleanup function
     return () => {
       window.removeEventListener('mousemove', updateMousePosition);
       window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animationFrameId); // Cancel the animation frame on cleanup
+      cancelAnimationFrame(animationFrameId);
     };
-  }, [isLoading]); // Dependency array
+  }, [isLoading]); // Only re-run the effect if isLoading changes
 
   return <canvas id="canvas" />;
 };
