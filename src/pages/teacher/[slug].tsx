@@ -15,37 +15,60 @@ const TeacherSlug = () => {
   const { slug } = router.query;
 
   useEffect(() => {
-    if (loading || premiumLoading) return; // Wait for both user and premium status to be determined
+    if (loading || premiumLoading) {
+      console.log('Waiting for auth or premium status loading');
+      return; // Wait for both user and premium status to be determined
+    }
 
-    const checkoutInitiated = localStorage.getItem('checkoutInitiated');
+    console.log('Auth status:', { user, error });
+    console.log('Premium status:', { userIsPremium, premiumLoading });
+
+    if (error) {
+      console.error('Authentication error:', error);
+      return; // Handle authentication error
+    }
 
     if (!user) {
+      console.log('No user found, redirecting to /signIn');
       router.push('/signIn'); // Redirect to sign-in if not authenticated
       return;
     }
 
-    if (user && !userIsPremium && !checkoutInitiated) {
-      createCheckoutSession(user.uid);
-      localStorage.setItem('checkoutInitiated', 'true');
+    const checkoutInitiated = localStorage.getItem('checkoutInitiated');
+
+    if (user && !userIsPremium) {
+      console.log('Non-premium user, redirecting to goPremium page');
+      router.push('/goPremium'); // Redirect non-premium users to the goPremium page immediately
       return;
-    }
+    }    
 
-    if (userIsPremium) {
-      localStorage.removeItem('checkoutInitiated');
-    }
+    if (userIsPremium && slug) {
+      if (checkoutInitiated) {
+        localStorage.removeItem('checkoutInitiated');
+      }
 
-    if (slug && userIsPremium) {
       const fetchTeacher = async () => {
-        const fetchedTeacher = await fetchTeacherBySlug(slug);
-        setTeacher(fetchedTeacher[0]);
+        try {
+          const fetchedTeacher = await fetchTeacherBySlug(slug);
+          setTeacher(fetchedTeacher[0]);
+        } catch (e) {
+          console.error('Error fetching teacher:', e);
+          // Handle fetch error, e.g., show an error message or take other actions
+        }
       };
 
       fetchTeacher();
     }
-  }, [slug, user, loading, userIsPremium, premiumLoading, router]);
+  }, [slug, user, loading, userIsPremium, premiumLoading]);
 
-  if (error) return <div>Error: {error.message}</div>;
-  if (loading || premiumLoading || !teacher) return <div>Loading...</div>;
+  if (loading || premiumLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!teacher) {
+    // Consider handling this state differently, e.g., "Teacher not found" message
+    return <div>Loading teacher data...</div>;
+  }
 
   return (
     <div>

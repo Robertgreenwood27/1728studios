@@ -1,37 +1,53 @@
-///stripe/usePremiumStatus.ts
+//stripe/usePremiumStatus.ts
 import { useState, useEffect } from "react";
 import { User } from "firebase/auth";
 import isUserPremium from "./isUserPremium";
 
 export default function usePremiumStatus(user: User | null): [boolean, boolean] {
   const [premiumStatus, setPremiumStatus] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true); // Add a loading state
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    let isMounted = true; // This will help us to avoid state updates on unmounted components
+    let isMounted = true;
 
     const checkPremiumStatus = async () => {
-      if (user) {
-        setIsLoading(true); // Start loading when the check begins
-        const isPremium = await isUserPremium();
-        if (isMounted) {
-          setPremiumStatus(isPremium);
-          setIsLoading(false); // Stop loading when the check is complete
+      try {
+        if (user) {
+          const isPremium = await isUserPremium();
+          if (isMounted) {
+            setPremiumStatus(isPremium);
+          }
+        } else {
+          if (isMounted) {
+            setPremiumStatus(false);
+          }
         }
-      } else {
+      } catch (error) {
+        console.error("Error checking premium status:", error);
         if (isMounted) {
-          setPremiumStatus(false); // If there's no user, set premium status to false
-          setIsLoading(false); // Not loading since no user check is necessary
+          // Handle error state if necessary, for now, setting premiumStatus to false
+          setPremiumStatus(false);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
         }
       }
     };
 
-    checkPremiumStatus();
+    // Invoke the function only if the user exists
+    if (user) {
+      setIsLoading(true);
+      checkPremiumStatus();
+    } else {
+      // Immediately set loading to false if there is no user
+      setIsLoading(false);
+    }
 
     return () => {
-      isMounted = false; // Set isMounted to false when the component unmounts
+      isMounted = false;
     };
   }, [user]);
 
-  return [premiumStatus, isLoading]; // Return both the premium status and the loading state
+  return [premiumStatus, isLoading];
 }

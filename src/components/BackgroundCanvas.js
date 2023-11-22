@@ -32,7 +32,6 @@ const BackgroundCanvas = ({ isLoading }) => {
   };
 
   useEffect(() => {
-    console.log("isLoading in BackgroundCanvas:", isLoading);
 
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
