@@ -49,7 +49,7 @@ export default function Login() {
       }
     } catch (error) {
       console.error("Error in handleLoginOrCreateAccount:", error);
-  
+    
       let message = '';
       if (typeof error === 'object' && error !== null && 'code' in error) {
         const errorCode = (error as { code: string }).code;
@@ -61,9 +61,8 @@ export default function Login() {
             message = 'No user found with this email.';
             break;
           case 'auth/email-already-in-use':
-            // Since the email is already in use, try signing in instead
-            await signInWithEmailAndPassword(auth, email, password);
-            return; // Exit the function after handling sign-in
+            message = 'This email is already associated with an account. If you signed up with Google, please sign in with Google instead.';
+            break;
           // Add more cases for other errors as needed
           default:
             message = 'An error occurred. Please try again.';
@@ -72,7 +71,7 @@ export default function Login() {
         // Handle the case where the error is not the expected type
         message = 'An unexpected error occurred.';
       }
-  
+    
       setErrorMessage(message);
     } finally {
       setLoading(false);
