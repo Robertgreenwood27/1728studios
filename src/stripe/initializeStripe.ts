@@ -1,3 +1,4 @@
+//initializeStripe.ts
 import { Stripe, loadStripe } from '@stripe/stripe-js';
 
 let stripePromise: Stripe | null = null;
