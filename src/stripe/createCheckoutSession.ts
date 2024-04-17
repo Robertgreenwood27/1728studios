@@ -5,7 +5,7 @@ import getStripe from './initializeStripe';
 
 export async function createCheckoutSession(uid: string) {
   const checkoutSessionRef = await addDoc(collection(firestore, "users", uid, "checkout_sessions"), {
-    price: "price_1P5pDaKinDw5GukGVKY6Zvgz", // Replace with your Stripe price ID
+    price: "price_1P5omfKinDw5GukGGnZNbJ4i", // Replace with your Stripe price ID
     success_url: window.location.origin,
     cancel_url: window.location.origin,
   });
