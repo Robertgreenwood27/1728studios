@@ -27,12 +27,12 @@ const GoPremium = () => {
     setUpgradeLoading(true);
     try {
       await createCheckoutSession(user.uid);
+      // Keep loading state until the checkout session is fully initiated
     } catch (e) {
       console.error('Error initiating checkout session:', e);
       // Display an error message or show a toast notification
       alert('Error upgrading to premium. Please try again.');
-    } finally {
-      setUpgradeLoading(false);
+      setUpgradeLoading(false); // Stop loading state on error
     }
   };
 
@@ -60,7 +60,10 @@ const GoPremium = () => {
             ) : (
               <button
                 onClick={handleUpgrade}
-                className="bg-blue-800 rounded hover:bg-blue-700 text-white font-bold py-2 px-4 transition duration-300 mb-4 mr-2"
+                className={`bg-blue-800 rounded hover:bg-blue-700 text-white font-bold py-2 px-4 transition duration-300 mb-4 mr-2 ${
+                  upgradeLoading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+                disabled={upgradeLoading}
               >
                 Count Me In!
               </button>
