@@ -5,7 +5,6 @@ import { auth } from "src/firebase/firebaseClient";
 import usePremiumStatus from "src/stripe/usePremiumStatus";
 import Image from "next/image";
 import { createCheckoutSession } from "src/stripe/createCheckoutSession";
-import { Card, CardContent } from "@/components/ui/card";
 
 export default function GuideAd() {
   const [user, userLoading] = useAuthState(auth);
@@ -25,8 +24,11 @@ export default function GuideAd() {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto bg-black text-white overflow-hidden cursor-pointer" onClick={handleGuideLinkClick}>
-      <CardContent className="p-6">
+    <div
+      className="w-full max-w-md mx-auto bg-black text-white overflow-hidden cursor-pointer border border-white rounded-lg"
+      onClick={handleGuideLinkClick}
+    >
+      <div className="p-6">
         <div className="flex justify-center mb-4">
           <Image src="/guidelogo.png" alt="The Guide Logo" width={150} height={75} />
         </div>
@@ -39,7 +41,7 @@ export default function GuideAd() {
             objectFit="contain"
           />
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
