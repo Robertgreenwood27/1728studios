@@ -32,31 +32,33 @@ export default function DarkCloudAd() {
   ];
 
   return (
-    <Card className="w-full max-w-md mx-auto bg-black text-white overflow-hidden cursor-pointer" onClick={handleDarkCloudLinkClick}>
-      <CardContent className="p-6">
-        <div className="flex justify-center mb-4">
-          <Image
-            src="/DarkCloudLogo.png" // Update the path to your logo image
-            alt="Dark Cloud Logo"
-            width={200} // Adjust width to make the logo larger
-            height={200}
-          />
-        </div>
-        
-        <h2 className="text-2xl font-bold text-center mb-6">
-          Explore the Depths of Dark Cloud!
-        </h2>
+    <div className="w-full max-w-md mx-auto bg-black text-white overflow-hidden cursor-pointer" onClick={handleDarkCloudLinkClick}>
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex justify-center mb-4">
+            <Image
+              src="/DarkCloudLogo.png" // Update the path to your logo image
+              alt="Dark Cloud Logo"
+              width={200} // Adjust width to make the logo larger
+              height={200}
+            />
+          </div>
+          
+          <h2 className="text-2xl font-bold text-center mb-6">
+            Explore the Depths of Dark Cloud!
+          </h2>
 
-        {/* Features List */}
-        <div className="flex flex-col items-center mb-6">
-          {features.map((feature, index) => (
-            <div key={index} className="flex items-center mb-2">
-              <feature.icon className="w-6 h-6 mr-2" />
-              <span className="text-lg">{feature.text}</span>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+          {/* Features List */}
+          <div className="flex flex-col items-center mb-6">
+            {features.map((feature, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <feature.icon className="w-6 h-6 mr-2" />
+                <span className="text-lg">{feature.text}</span>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
