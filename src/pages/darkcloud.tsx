@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Shield, Zap, Database, Cloud, Cpu, Play, Pause } from 'lucide-react';
+import { Shield, Zap, Database, Cloud, Cpu, Play, Pause, Bell } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 const FeatureCard = ({ icon: Icon, title, description }) => (
   <div className="border border-blue-500 bg-black bg-opacity-40 p-6 rounded-xl shadow-lg backdrop-blur-sm">
@@ -82,7 +83,53 @@ const VideoPlayer = () => {
   );
 };
 
+const DarkCloudAd = () => {
+  const router = useRouter();
+
+  const handleDarkCloudLinkClick = () => {
+    router.push('/darkcloud');
+  };
+
+  const features = [
+    { icon: Shield, text: "Advanced AI Security" },
+    { icon: Zap, text: "Real-time Threat Detection" },
+    { icon: Cloud, text: "Scalable Cloud Architecture" },
+  ];
+
+  return (
+    <div
+      className="w-full max-w-md mx-auto bg-black text-white p-6 overflow-hidden cursor-pointer border border-white rounded-lg"
+      onClick={handleDarkCloudLinkClick}
+    >
+      <div className="flex justify-center mb-4">
+        <Image
+          src="/DarkCloudLogo.png"
+          alt="Dark Cloud Logo"
+          width={200}
+          height={200}
+        />
+      </div>
+      
+      <h2 className="text-2xl font-bold text-center mb-6">
+        Explore the Depths of Dark Cloud!
+      </h2>
+
+      <div className="flex flex-col items-center mb-6">
+        {features.map((feature, index) => (
+          <div key={index} className="flex items-center mb-2">
+            <feature.icon className="w-6 h-6 mr-2" />
+            <span className="text-lg">{feature.text}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const DarkCloudLanding = () => {
+  const [email, setEmail] = useState('');
+  const [submitStatus, setSubmitStatus] = useState('');
+
   const features = [
     {
       icon: Zap,
@@ -105,6 +152,34 @@ const DarkCloudLanding = () => {
       description: "Seamlessly handle increasing data volumes and complexity with our Kubernetes-based deployment."
     },
   ];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitStatus('Sending...');
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        setSubmitStatus('Thank you for subscribing!');
+        setEmail('');
+      } else {
+        setSubmitStatus('An error occurred. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setSubmitStatus('An error occurred. Please try again.');
+    }
+
+    // Clear status message after 3 seconds
+    setTimeout(() => setSubmitStatus(''), 3000);
+  };
 
   return (
     <div className="text-white min-h-screen">
@@ -151,9 +226,30 @@ const DarkCloudLanding = () => {
             <li>Reduced latency in threat detection and mitigation</li>
           </ul>
         </section>
+
+        <section className="mt-16 border border-blue-500 bg-black bg-opacity-40 p-8 rounded-xl backdrop-blur-sm text-center">
+          <h2 className="text-3xl font-semibold mb-4 text-blue-300">Coming Soon</h2>
+          <p className="text-lg mb-6 text-gray-300">
+            Our cutting-edge AI-driven cybersecurity system is currently in its final stages of development. 
+            We're working hard to bring you the most advanced protection for your digital assets.
+          </p>
+        
+        </section>
       </main>
+
+      <footer className="bg-black bg-opacity-50 py-4 mt-16">
+        <div className="container mx-auto px-4 text-center text-gray-300">
+          © 2024 DarkCloud. All rights reserved.
+        </div>
+      </footer>
     </div>
   );
 };
 
-export default DarkCloudLanding;
+export default function DarkCloud() {
+  return (
+    <div>
+      <DarkCloudLanding />
+    </div>
+  );
+}

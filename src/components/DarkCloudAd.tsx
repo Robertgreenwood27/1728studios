@@ -1,27 +1,13 @@
 import React from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from 'next/router';
-import { auth } from "src/firebase/firebaseClient"; 
-import usePremiumStatus from "src/stripe/usePremiumStatus";
 import Image from "next/image";
-import { createCheckoutSession } from "src/stripe/createCheckoutSession";
 import { Shield, Zap, Cloud } from "lucide-react";
 
 export default function DarkCloudAd() {
-  const [user, userLoading] = useAuthState(auth);
-  const userIsPremium = usePremiumStatus(user ?? null);
   const router = useRouter();
 
-  if (userLoading) return <div>Loading...</div>;
-
   const handleDarkCloudLinkClick = () => {
-    if (!user) {
-      router.push('/signIn');
-    } else if (userIsPremium) {
-      router.push('/darkcloud');
-    } else {
-      createCheckoutSession(user.uid);
-    }
+    router.push('/darkcloud');
   };
 
   const features = [
@@ -37,9 +23,9 @@ export default function DarkCloudAd() {
     >
       <div className="flex justify-center mb-4">
         <Image
-          src="/DarkCloudLogo.png" // Update the path to your logo image
+          src="/DarkCloudLogo.png"
           alt="Dark Cloud Logo"
-          width={200} // Adjust width to make the logo larger
+          width={200}
           height={200}
         />
       </div>
@@ -48,7 +34,6 @@ export default function DarkCloudAd() {
         Explore the Depths of Dark Cloud!
       </h2>
 
-      {/* Features List */}
       <div className="flex flex-col items-center mb-6">
         {features.map((feature, index) => (
           <div key={index} className="flex items-center mb-2">
