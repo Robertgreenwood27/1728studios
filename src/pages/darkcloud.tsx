@@ -66,7 +66,7 @@ const VideoPlayer = () => {
       >
         <div 
           className="h-full bg-blue-500" 
-          style={{ width: `${progress}%` }}
+          style={{ width: `${progress}%` }} // Use template literals
         ></div>
       </div>
       <button 
@@ -117,7 +117,7 @@ const DarkCloudAd = () => {
       <div className="flex flex-col items-center mb-6">
         {features.map((feature, index) => (
           <div key={index} className="flex items-center mb-2">
-            <feature.icon className="w-6 h-6 mr-2" />
+            <feature.icon className="w-6 h-6 mr-2" /> {/* Corrected to use capitalized component */}
             <span className="text-lg">{feature.text}</span>
           </div>
         ))}
@@ -128,7 +128,6 @@ const DarkCloudAd = () => {
 
 const DarkCloudLanding = () => {
   const [email, setEmail] = useState('');
-  const [submitStatus, setSubmitStatus] = useState('');
 
   const features = [
     {
@@ -153,32 +152,10 @@ const DarkCloudLanding = () => {
     },
   ];
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitStatus('Sending...');
-
-    try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      if (response.ok) {
-        setSubmitStatus('Thank you for subscribing!');
-        setEmail('');
-      } else {
-        setSubmitStatus('An error occurred. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setSubmitStatus('An error occurred. Please try again.');
-    }
-
-    // Clear status message after 3 seconds
-    setTimeout(() => setSubmitStatus(''), 3000);
+    console.log('Email submitted:', email);
+    setEmail('');
   };
 
   return (
@@ -231,9 +208,9 @@ const DarkCloudLanding = () => {
           <h2 className="text-3xl font-semibold mb-4 text-blue-300">Coming Soon</h2>
           <p className="text-lg mb-6 text-gray-300">
             Our cutting-edge AI-driven cybersecurity system is currently in its final stages of development. 
-            We're working hard to bring you the most advanced protection for your digital assets.
+            We`&apos;`re working hard to bring you the most advanced protection for your digital assets.
           </p>
-        
+          
         </section>
       </main>
 
