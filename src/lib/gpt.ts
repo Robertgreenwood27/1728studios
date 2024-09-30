@@ -1,27 +1,39 @@
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // This is also the default, can be omitted
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const getGPT3Response = async (messages, res) => {
+export const getGPT4oMiniResponse = async (messages, res) => {
   try {
-    const chatCompletion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+    const stream = await openai.chat.completions.create({
+      model: "gpt-4o-mini-2024-07-18",
       messages: messages,
+      stream: true,
+      max_tokens: 16384,
     });
 
-    const content = chatCompletion.choices[0].message.content.trim();
-    res.write(content);
+    // Set up SSE
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache, no-transform',
+      'Connection': 'keep-alive',
+    });
+
+    for await (const chunk of stream) {
+      const content = chunk.choices[0]?.delta?.content || '';
+      res.write(`data: ${JSON.stringify({ content })}\n\n`);
+    }
+
+    res.write('data: [DONE]\n\n');
     res.end();
   } catch (error) {
     if (error instanceof OpenAI.APIError) {
-      console.error(error.status);  // e.g. 401
-      console.error(error.message); // e.g. The authentication token you passed was invalid...
-      console.error(error.code);    // e.g. 'invalid_api_key'
-      console.error(error.type);    // e.g. 'invalid_request_error'
+      console.error(error.status);
+      console.error(error.message);
+      console.error(error.code);
+      console.error(error.type);
     } else {
-      // Non-API error
       console.log(error);
     }
     res.status(500).json({ error: "An error occurred during your request." });
