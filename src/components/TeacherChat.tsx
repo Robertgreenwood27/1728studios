@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, KeyboardEvent } from 'react';
+import React, { useState, useMemo, useEffect, useRef, KeyboardEvent } from 'react';
 import builder from '../lib/imageUrlBuilder';
 import { generatePrompt } from '../lib/generatePrompt';
 import { useLoading } from '../components/LoadingContext';
@@ -21,50 +21,17 @@ interface TeacherChatProps {
 const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
   const [chatLog, setChatLog] = useState<ChatMessage[]>([]);
   const [userInput, setUserInput] = useState<string>('');
-  const [userIsScrolling, setUserIsScrolling] = useState<boolean>(false);
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
   const { setLoading } = useLoading();
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [newResponse, setNewResponse] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!userIsScrolling) {
-      const chatContainer = document.getElementById('chat-container');
-      if (chatContainer) {
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-      }
+    if (newResponse && chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      setNewResponse(false);
     }
-  }, [chatLog, userIsScrolling]);
-
-  useEffect(() => {
-    const handleUserScroll = () => {
-      setUserIsScrolling(true);
-      clearTimeout(timeout);
-      var timeout = setTimeout(() => {
-        setUserIsScrolling(false);
-      }, 1000);
-    };
-
-    const chatContainer = document.getElementById('chat-container');
-    if (chatContainer) {
-      chatContainer.addEventListener('scroll', handleUserScroll);
-    }
-
-    return () => {
-      if (chatContainer) {
-        chatContainer.removeEventListener('scroll', handleUserScroll);
-      }
-    };
-  }, []);
-
-  const imageUrl = builder
-    .image(teacher.photo)
-    .width(200)
-    .height(200)
-    .auto('format')
-    .fit('crop')
-    .url();
-
-  const randomBgNumber = useMemo(() => Math.floor(Math.random() * 10) + 1, []);
-  const bgImagePath = `/bg${randomBgNumber}.png`;
+  }, [chatLog, newResponse]);
 
   const handleSendMessage = async () => {
     if (!userInput.trim()) return;
@@ -98,6 +65,8 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
       const reader = response.body?.getReader();
       let apiResponse = '';
   
+      setChatLog(prevLog => [...prevLog, { sender: 'api', message: '' }]);
+  
       while (true) {
         const { value, done } = await reader!.read();
         if (done) break;
@@ -115,20 +84,25 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
             try {
               const parsed = JSON.parse(data);
               apiResponse += parsed.content;
+              setChatLog(prevLog => {
+                const newLog = [...prevLog];
+                newLog[newLog.length - 1] = { sender: 'api', message: apiResponse };
+                return newLog;
+              });
+              setNewResponse(true);
             } catch (e) {
               console.error('Error parsing SSE data', e);
             }
           }
         }
       }
-
-      setChatLog(prevLog => [...prevLog, { sender: 'api', message: apiResponse }]);
     } catch (error) {
       console.error('Error:', error);
       setChatLog(prevLog => [
         ...prevLog,
         { sender: 'api', message: 'An error occurred.' },
       ]);
+      setNewResponse(true);
     } finally {
       setLoading(false);
       setIsStreaming(false);
@@ -141,6 +115,17 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
       handleSendMessage();
     }
   };
+
+  const imageUrl = builder
+    .image(teacher.photo)
+    .width(200)
+    .height(200)
+    .auto('format')
+    .fit('crop')
+    .url();
+
+  const randomBgNumber = useMemo(() => Math.floor(Math.random() * 10) + 1, []);
+  const bgImagePath = `/bg${randomBgNumber}.png`;
 
   return (
     <>
@@ -159,7 +144,10 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
           <span className="text-zinc-500">{teacher.departmentOrSubject}</span>
         </header>
   
-        <div id="chat-container" className="flex flex-col w-full rounded-lg shadow-inner flex-grow overflow-y-auto p-4 sm:p-6 space-y-4 max-h-[50vh] sm:max-h-[60vh]">
+        <div 
+          ref={chatContainerRef}
+          className="flex flex-col w-full rounded-lg shadow-inner flex-grow overflow-y-auto p-4 sm:p-6 space-y-4 max-h-[50vh] sm:max-h-[60vh]"
+        >
           {chatLog.map((chat, index) => (
             <div key={index} className={`flex ${chat.sender === 'user' ? 'justify-end' : 'justify-start'} my-2 sm:my-3`}>
               <div
