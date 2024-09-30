@@ -14,9 +14,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const stream = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini-2024-07-18", // Updated to use GPT-4o-mini
       messages: messages,
       stream: true,
+      max_tokens: 16384, // Setting max tokens as per model specifications
     });
 
     res.writeHead(200, {
