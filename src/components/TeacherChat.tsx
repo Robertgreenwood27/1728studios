@@ -27,9 +27,12 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
 
   useEffect(() => {
     if (!userIsScrolling) {
-      window.scrollTo(0, document.body.scrollHeight);
+      const chatContainer = document.getElementById('chat-container');
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
     }
-  }, [chatLog]);
+  }, [chatLog, userIsScrolling]);
 
   useEffect(() => {
     const handleUserScroll = () => {
@@ -40,10 +43,15 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
       }, 1000);
     };
 
-    window.addEventListener('scroll', handleUserScroll);
+    const chatContainer = document.getElementById('chat-container');
+    if (chatContainer) {
+      chatContainer.addEventListener('scroll', handleUserScroll);
+    }
 
     return () => {
-      window.removeEventListener('scroll', handleUserScroll);
+      if (chatContainer) {
+        chatContainer.removeEventListener('scroll', handleUserScroll);
+      }
     };
   }, []);
 
@@ -59,14 +67,16 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
   const bgImagePath = `/bg${randomBgNumber}.png`;
 
   const handleSendMessage = async () => {
+    if (!userInput.trim()) return;
+
     setLoading(true);
     setIsStreaming(true);
-    const newChatLog = [...chatLog, { sender: 'user', message: userInput }];
-    setChatLog(newChatLog);
+    const newUserMessage = { sender: 'user', message: userInput };
+    setChatLog(prevLog => [...prevLog, newUserMessage]);
     setUserInput('');
   
-    const messages = newChatLog.map((chat) => ({
-      role: chat.sender === 'user' ? 'user' : 'system',
+    const messages = [...chatLog, newUserMessage].map((chat) => ({
+      role: chat.sender === 'user' ? 'user' : 'assistant',
       content: chat.message,
     }));
     const initialPrompt = generatePrompt(teacher);
@@ -86,7 +96,7 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
       }
   
       const reader = response.body?.getReader();
-      let partialMessage = '';
+      let apiResponse = '';
   
       while (true) {
         const { value, done } = await reader!.read();
@@ -104,20 +114,18 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
             }
             try {
               const parsed = JSON.parse(data);
-              partialMessage += parsed.content;
-              setChatLog((prevLog) => [
-                ...prevLog.slice(0, -1),
-                { sender: 'api', message: partialMessage },
-              ]);
+              apiResponse += parsed.content;
             } catch (e) {
               console.error('Error parsing SSE data', e);
             }
           }
         }
       }
+
+      setChatLog(prevLog => [...prevLog, { sender: 'api', message: apiResponse }]);
     } catch (error) {
       console.error('Error:', error);
-      setChatLog((prevLog) => [
+      setChatLog(prevLog => [
         ...prevLog,
         { sender: 'api', message: 'An error occurred.' },
       ]);
@@ -134,21 +142,15 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
     }
   };
 
-  const handleBackButtonClick = () => {
-    if (typeof window !== 'undefined') {
-      window.history.back();
-    }
-  };
-  
   return (
     <>
-      <button onClick={handleBackButtonClick} className="text-white hover:text-blue-800 ml-12 text-xl mb-4">
+      <button onClick={() => window.history.back()} className="text-white hover:text-blue-800 ml-4 sm:ml-12 text-xl mb-4">
         <FontAwesomeIcon icon={faArrowLeft} />
       </button>
-      <div className="flex flex-col items-center justify-between text-white mx-8b">
-        <header className="flex flex-col items-center mb-10">
+      <div className="flex flex-col items-center justify-between text-white mx-4 sm:mx-8">
+        <header className="flex flex-col items-center mb-6 sm:mb-10">
           <div
-            className="w-40 h-40 rounded-full bg-cover bg-center shadow-lg mb-6"
+            className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-cover bg-center shadow-lg mb-4 sm:mb-6"
             style={{ backgroundImage: `url('${bgImagePath}')` }}
           >
             <img src={imageUrl} alt={teacher.name} className="w-full h-full rounded-full" />
@@ -157,46 +159,45 @@ const TeacherChat: React.FC<TeacherChatProps> = ({ teacher }) => {
           <span className="text-zinc-500">{teacher.departmentOrSubject}</span>
         </header>
   
-        <div className="flex flex-col w-full rounded-lg shadow-inner flex-grow overflow-hidden">
-          <div className="custom-scrollbar overflow-y-auto flex-grow p-6">
-            {chatLog.map((chat, index) => (
-              <div key={index} className={`flex ${chat.sender === 'user' ? 'justify-end' : 'justify-start'} my-3`}>
-                <div
-                  className={`inline-flex px-5 py-3 rounded-lg ${
-                    chat.sender === 'user' ? 'border border-blue-800' : 'border border-red-800'
-                  } bg-black bg-opacity-50`}
-                >
-                  {chat.message}
-                </div>
+        <div id="chat-container" className="flex flex-col w-full rounded-lg shadow-inner flex-grow overflow-y-auto p-4 sm:p-6 space-y-4 max-h-[50vh] sm:max-h-[60vh]">
+          {chatLog.map((chat, index) => (
+            <div key={index} className={`flex ${chat.sender === 'user' ? 'justify-end' : 'justify-start'} my-2 sm:my-3`}>
+              <div
+                className={`inline-block px-3 py-2 sm:px-5 sm:py-3 rounded-lg ${
+                  chat.sender === 'user' ? 'border-2 border-blue-800' : 'border-2 border-red-800'
+                } bg-black bg-opacity-50 max-w-full break-words`}
+              >
+                {chat.message}
               </div>
-            ))}
-            {isStreaming && (
-              <div className="flex justify-start my-3">
-                <div className="inline-flex px-5 py-3 rounded-lg border border-red-800 bg-black bg-opacity-50">
-                  <span className="animate-pulse">...</span>
-                </div>
+            </div>
+          ))}
+          {isStreaming && (
+            <div className="flex justify-start my-2 sm:my-3">
+              <div className="inline-block px-3 py-2 sm:px-5 sm:py-3 rounded-lg border-2 border-red-800 bg-black bg-opacity-50">
+                <span className="animate-pulse">...</span>
               </div>
-            )}
-          </div>
-          <textarea
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type your message..."
-            className="mt-6 p-4 bg-transparent text-white border border-blue-800 rounded-lg focus:ring focus:ring-blue-600"
-            disabled={isStreaming}
-          />
-          <button
-            onClick={handleSendMessage}
-            className="mt-6 w-full py-3 font-semibold text-white rounded-lg shadow-md transform transition duration-200 ease-in-out border-2 border-blue-800 hover:border-opacity-50 hover:border-blue-800"
-            disabled={isStreaming}
-          >
-            Send
-          </button>
+            </div>
+          )}
         </div>
+        <textarea
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Type your message..."
+          className="mt-4 sm:mt-6 p-3 sm:p-4 w-full bg-transparent text-white border border-blue-800 rounded-lg focus:ring focus:ring-blue-600"
+          rows={3}
+          disabled={isStreaming}
+        />
+        <button
+          onClick={handleSendMessage}
+          className="mt-4 sm:mt-6 w-full py-3 font-semibold text-white rounded-lg shadow-md transform transition duration-200 ease-in-out border-2 border-blue-800 hover:border-opacity-50 hover:border-blue-800"
+          disabled={isStreaming}
+        >
+          Send
+        </button>
       </div>
     </>
-  );  
+  );
 };
 
 export default TeacherChat;
