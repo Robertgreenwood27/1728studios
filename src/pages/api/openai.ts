@@ -1,26 +1,39 @@
-import axios from 'axios';
+import { NextApiRequest, NextApiResponse } from 'next';
+import OpenAI from 'openai';
 
-export default async function handler(req, res) {
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   const messages = req.body.messages;
 
   try {
-    const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: "gpt-3.5-turbo",
-        messages: messages,  // This should already include the initial prompt as the first message
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const stream = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: messages,
+      stream: true,
+    });
 
-    res.status(200).json({ message: response.data.choices[0].message.content.trim() });
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache, no-transform',
+      'Connection': 'keep-alive',
+    });
+
+    for await (const chunk of stream) {
+      const content = chunk.choices[0]?.delta?.content || '';
+      res.write(`data: ${JSON.stringify({ content })}\n\n`);
+    }
+
+    res.write('data: [DONE]\n\n');
+    res.end();
   } catch (error) {
-    console.error('Error:', error.response ? error.response.data : error.message);
-    res.status(500).json({ error: error.response ? error.response.data : error.message });
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred during your request.' });
   }
 }
