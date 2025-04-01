@@ -1,4 +1,55 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 1728 Studios Website
+
+This is the official website for 1728 Studios, showcasing the company's AI products, services, and thought leadership.
+
+## Website Structure
+
+The website has been reorganized with the following structure:
+
+1. **Home page**: Showcases the company with sections for:
+   - Hero section with mission statement
+   - About section highlighting company values
+   - Projects preview
+   - Services preview
+   - Call-to-action section
+
+2. **Projects page**: Contains the company's products:
+   - The Guide (AI educators)
+   - Dark Cloud (AI-driven cybersecurity)
+
+3. **About page**: Company mission and values
+
+4. **Consulting page**: Services offered for AI integration
+
+5. **Contact page**: Contact information
+
+6. **Blog**: A new section featuring thought leadership content:
+   - Blog index page with search and filtering capabilities
+   - Individual blog post pages
+   - Admin interface for uploading and managing blog content
+
+## New Features
+
+### Blog System
+- **Blog Index Page**: Lists all blog posts with search and category filtering
+- **Blog Post Page**: Displays individual blog posts with related articles
+- **Admin Dashboard**: Interface for managing the website
+- **Blog Upload Page**: Form for creating and editing blog posts in Markdown format
+- **Blog Service**: Backend service for managing blog posts
+- **API Endpoints**: Handles blog post uploads and management
+
+### Authentication
+Note: Authentication functionality has been temporarily commented out for development purposes. This should be re-enabled before deploying to production.
+
+## Technical Details
+
+This is a [Next.js](https://nextjs.org/) project with the following key technologies:
+
+- **Next.js**: React framework for server-rendered applications
+- **TailwindCSS**: Utility-first CSS framework for styling
+- **Markdown**: Blog posts are stored as Markdown files with frontmatter
+- **gray-matter**: For parsing frontmatter in Markdown files
+- **marked**: For converting Markdown to HTML
 
 ## Getting Started
 
@@ -8,33 +59,31 @@ First, run the development server:
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Content Management
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Blog Posts
+Blog posts are stored as Markdown files in the `content/blog` directory. Each post has frontmatter with metadata such as:
+- Title
+- Author
+- Date
+- Category
+- Featured image
+- Related posts
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### Adding a New Blog Post
+1. Navigate to `/admin/blog-upload` in the browser
+2. Fill out the form with the blog post details
+3. Upload a featured image
+4. Write or paste the content in Markdown format
+5. Preview the content
+6. Submit the form to create the post
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Deployment
 
-## Learn More
+The easiest way to deploy this Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

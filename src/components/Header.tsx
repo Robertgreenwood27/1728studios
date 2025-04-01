@@ -25,6 +25,9 @@ const Header = () => {
     const links = [
         { path: '/', label: 'Home' },
         { path: '/about', label: 'About' },
+        { path: '/projects', label: 'Projects' },
+        { path: '/blog', label: 'Blog' },
+        { path: '/consulting', label: 'Consulting' },
         { path: '/contact', label: 'Contact' },
         // ... more links ...
     ];

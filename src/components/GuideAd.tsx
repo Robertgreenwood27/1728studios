@@ -1,13 +1,12 @@
 import React from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from 'next/router';
-import { auth } from "src/firebase/firebaseClient"; 
-import usePremiumStatus from "src/stripe/usePremiumStatus";
+import usePremiumStatus from "../stripe/usePremiumStatus";
 import Image from "next/image";
 import { createCheckoutSession } from "src/stripe/createCheckoutSession";
 
 export default function GuideAd() {
-  const [user, userLoading] = useAuthState(auth);
+  // Mock user and loading state since we're not using Firebase auth
+  const [user, userLoading] = [null, false];
   const userIsPremium = usePremiumStatus(user ?? null);
   const router = useRouter();
 

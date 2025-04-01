@@ -1,0 +1,8 @@
+This folder contains blog post images. For production, you would replace these with actual images.
+
+Suggested image dimensions:
+- Featured post image: 1200x600px
+- Blog card thumbnails: 600x400px
+- Author avatars: 200x200px (square)
+
+For optimal performance, compress all images before uploading.
