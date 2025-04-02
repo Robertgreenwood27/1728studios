@@ -1,4 +1,5 @@
 import '@/styles/globals.css'
+import '../styles/blog.css'
 import type { AppProps } from 'next/app'
 import Header from '@/components/Header'
 import BackgroundCanvas from '@/components/BackgroundCanvas'

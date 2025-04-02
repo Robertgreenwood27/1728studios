@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Calendar, Clock, User, ArrowLeft, Share2, Linkedin, Twitter } from 'lucide-react';
 import { getBlogPostBySlug, getAllBlogPosts, getRelatedBlogPosts } from '../../services/blogService';
+import Head from 'next/head';
+import LatexRenderer from '@/components/LatexRenderer';
 
 export async function getStaticProps({ params }) {
   const post = await getBlogPostBySlug(params.slug);
@@ -59,6 +61,12 @@ const BlogPostPage = ({ post, relatedPosts }) => {
   
   return (
     <div className="text-white min-h-screen">
+      <Head>
+        <title>{post.title} | 1728 Studios Blog</title>
+        <meta name="description" content={post.excerpt} />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossOrigin="anonymous" />
+      </Head>
+      
       {/* Header */}
       <header className="relative border-b border-blue-500 py-16 bg-black bg-opacity-50 backdrop-blur-sm overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -140,7 +148,7 @@ const BlogPostPage = ({ post, relatedPosts }) => {
           
           {/* Article Content */}
           <article className="prose prose-lg prose-invert prose-blue max-w-none mb-12">
-            <div dangerouslySetInnerHTML={{ __html: post.html }} />
+            <LatexRenderer content={post.html} className="blog-content" />
           </article>
           
           {/* Author Bio */}

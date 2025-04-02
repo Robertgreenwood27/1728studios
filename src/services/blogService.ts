@@ -3,6 +3,12 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter'; // We'll need to install this
 
+// Configure marked with basic options
+marked.setOptions({
+  gfm: true,
+  breaks: true,
+});
+
 export interface BlogPost {
   id: string;
   title: string;

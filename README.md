@@ -25,7 +25,7 @@ The website has been reorganized with the following structure:
 
 6. **Blog**: A new section featuring thought leadership content:
    - Blog index page with search and filtering capabilities
-   - Individual blog post pages
+   - Individual blog post pages with LaTeX support for mathematical expressions
    - Admin interface for uploading and managing blog content
 
 ## New Features
@@ -37,6 +37,14 @@ The website has been reorganized with the following structure:
 - **Blog Upload Page**: Form for creating and editing blog posts in Markdown format
 - **Blog Service**: Backend service for managing blog posts
 - **API Endpoints**: Handles blog post uploads and management
+- **LaTeX Support**: Renders mathematical expressions in blog posts using KaTeX
+
+### LaTeX Support
+The blog system now supports LaTeX mathematical notation:
+- **Inline Math**: Use single dollar signs for inline expressions: `$E = mc^2$`
+- **Display Math**: Use double dollar signs for block expressions: `$$\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$$`
+- **Custom Renderer**: A React component that processes LaTeX expressions and renders them using KaTeX
+- **Styling**: Custom CSS for properly displaying both inline and block mathematical expressions
 
 ### Authentication
 Note: Authentication functionality has been temporarily commented out for development purposes. This should be re-enabled before deploying to production.
@@ -50,6 +58,7 @@ This is a [Next.js](https://nextjs.org/) project with the following key technolo
 - **Markdown**: Blog posts are stored as Markdown files with frontmatter
 - **gray-matter**: For parsing frontmatter in Markdown files
 - **marked**: For converting Markdown to HTML
+- **KaTeX**: For rendering LaTeX mathematical expressions
 
 ## Getting Started
 
@@ -79,8 +88,9 @@ Blog posts are stored as Markdown files in the `content/blog` directory. Each po
 2. Fill out the form with the blog post details
 3. Upload a featured image
 4. Write or paste the content in Markdown format
-5. Preview the content
-6. Submit the form to create the post
+5. Include LaTeX expressions using `$...$` for inline math and `$$...$$` for display math
+6. Preview the content
+7. Submit the form to create the post
 
 ## Deployment
 
