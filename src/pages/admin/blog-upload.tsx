@@ -44,9 +44,10 @@ const BlogUploadPage = () => {
   ];
   
   // Generate a preview of the markdown content
-  const generatePreview = () => {
+  const generatePreview = async () => {
     try {
-      const html = marked.parse(markdownContent);
+      // Use await since marked.parse returns a Promise in newer versions
+      const html = await marked.parse(markdownContent);
       setPreviewHtml(html);
       setIsPreviewMode(true);
       setErrorMessage('');
@@ -182,7 +183,13 @@ const BlogUploadPage = () => {
               Edit
             </button>
             <button
-              onClick={generatePreview}
+              onClick={() => {
+                // Call async function without blocking UI
+                generatePreview().catch(err => {
+                  console.error("Error generating preview:", err);
+                  setErrorMessage("Failed to generate preview: " + err.message);
+                });
+              }}
               className={`px-4 py-2 rounded-r-lg ${
                 isPreviewMode
                   ? 'bg-blue-600 text-white'
