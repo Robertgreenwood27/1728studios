@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth } from '../firebase/firebaseClient';
+import { User } from 'firebase/auth';
+import { auth, onAuthStateChanged } from '../firebase/firebaseClient';
 
 interface AuthContextType {
   user: User | null;
@@ -29,8 +29,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           console.error("Error refreshing token:", error);
           setError(error as Error);
           setIsAuthenticated(false);
-          // Optionally, you might want to sign out the user here
-          // await auth.signOut();
         }
       } else {
         setUser(null);
